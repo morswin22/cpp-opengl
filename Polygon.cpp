@@ -66,6 +66,8 @@ void Physics::Polygon::setCount(int n)
 
 double Physics::Polygon::getPerimeter()
 {
+  if (count == 0)
+    return 0.0;
   double perimeter = vertices[0].getDistance(vertices[count - 1]);
   for (int i = 1; i < count; i++)
   {
@@ -97,6 +99,8 @@ double Physics::Polygon::getConvexArea()
 
 double Physics::Polygon::getArea()
 {
+  if (count == 0)
+    return 0.0;
   // Shoelace formula
   double positive = vertices[0].getY() * vertices[count - 1].getX();
   double negative = vertices[0].getX() * vertices[count - 1].getY();
