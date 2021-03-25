@@ -1,6 +1,7 @@
 #include "Point.h"
 #include <math.h>
 #include <iostream>
+#include <sstream>
 
 /** @file Point.cpp
  *
@@ -9,107 +10,105 @@
  * @author Patryk Janiak
  */
 
-using namespace Physics;
+using namespace Geometry;
 
 Point::Point()
 {
-  x = 0.0;
-  y = 0.0;
+  this->x = 0.0;
+  this->y = 0.0;
 }
 
-Point::Point(double _x, double _y)
+Point::Point(double x, double y)
 {
-  x = _x;
-  y = _y;
+  this->x = x;
+  this->y = y;
 }
 
-Point::Point(const Point& _p)
+Point::Point(const Point& p)
 {
-  x = _p.x;
-  y = _p.y;
+  this->x = p.x;
+  this->y = p.y;
 }
 
 Point::~Point()
 {
 }
 
-void Point::print()
+std::string Point::getString() const
 {
-  std::cout << "(" << x << ", " << y << ")\n";
+  std::ostringstream sstr;
+  sstr << "Point(" << this->x << ", " << this->y << ")";
+  return sstr.str();
 }
 
-void Point::setX(double _x)
+void Point::print() const 
 {
-  x = _x;
+  std::cout << this->getString() << "\n";
 }
 
-double Point::getX()
+void Point::setX(double x)
 {
-  return x;
+  this->x = x;
 }
 
-void Point::setY(double _y)
+double Point::getX() const
 {
-  y = _y;
+  return this->x;
 }
 
-double Point::getY()
+void Point::setY(double y)
 {
-  return y;
+  this->y = y;
 }
 
-double Point::getDistance(Point _p)
+double Point::getY() const
 {
-  double dx = _p.getX() - x;
-  double dy = _p.getY() - y;
+  return this->y;
+}
+
+double Point::getDistance(const Point& p) const
+{
+  double dx = p.x - this->x;
+  double dy = p.y - this->y;
   return sqrt(dx * dx + dy * dy);
 }
 
-double Point::getLength()
+double Point::getLength() const
 {
-  return sqrt(x * x + y * y);
+  return sqrt(this->x * this->x + this->y * this->y);
 }
 
-Point Point::add(Point _p)
+Point Point::add(const Point& p) const
 {
-  Point temp;
-  temp.setX(x + _p.getX());
-  temp.setY(y + _p.getY());
-  return temp;
+  return Point(this->x + p.x, this->y + p.y);
 }
 
-Point Point::subtract(Point _p)
+Point Point::subtract(const Point& p) const
 {
-  Point temp;
-  temp.setX(x - _p.getX());
-  temp.setY(y - _p.getY());
-  return temp;
+  return Point(this->x - p.x, this->y - p.y);
 }
 
-Point Point::multiply(double skalar)
+Point Point::multiply(double skalar) const
 {
-  Point temp;
-  temp.setX(skalar * x);
-  temp.setY(skalar * y);
-  return temp;
+  return Point(this->x * skalar, this->y * skalar);
 }
 
-Point Point::getInverse()
+Point Point::getInverse() const
 {
-  return multiply(-1);
+  return this->multiply(-1);
 }
 
-bool Point::isInverse(Point _p)
+bool Point::isInverse(const Point& p) const
 {
-  return _p.getX() == -x && _p.getY() == -y;
+  return this->x == -p.x && this->y == -p.y;
 }
 
-double Point::getProduct(Point _p)
+double Point::getProduct(const Point& p) const
 {
-  return x * _p.getX() + y * _p.getY();
+  return this->x * p.x + this->y * p.y;
 }
 
-double Point::getAngleBetween(Point _p)
+double Point::getAngleBetween(const Point& p) const
 {
-  return cos(getProduct(_p) / (getLength() * _p.getLength()));
+  return cos(this->getProduct(p) / (this->getLength() * p.getLength()));
 }

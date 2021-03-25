@@ -8,7 +8,7 @@
  * @author Patryk Janiak
  */
 
-namespace Physics {
+namespace Geometry {
 
   /** @brief A polygon consisting of vertices */
   class Polygon
@@ -26,7 +26,7 @@ namespace Physics {
      * @param p2 argument of type Point
      * @param p3 argument of type Point
      */
-    double getTriangleArea(Point p1, Point p2, Point p3);
+    double getTriangleArea(const Point& p1, const Point& p2, const Point& p3) const;
 
   public:
 
@@ -75,14 +75,20 @@ namespace Physics {
     */
     void setCount(int n);
 
+    /** @brief Getter for formatted position of the vertices */
+    std::string getString() const;
+
+    /** @brief Method that prints the result of getString() */
+    void print() const;
+
     /** @brief Method for calculating the perimeter of a polygon */
-    double getPerimeter();
+    double getPerimeter() const;
 
     /** @brief Method calculating the area of ​​a convex polygon */
-    double getConvexArea();
+    double getConvexArea() const;
 
     /** @brief Method calculating the area of ​​any polygon */
-    double getArea();
+    double getArea() const;
   };
 
 }
