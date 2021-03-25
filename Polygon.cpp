@@ -9,13 +9,15 @@
  * @author Patryk Janiak
  */
 
-Physics::Polygon::Polygon()
+using namespace Physics;
+
+Polygon::Polygon()
 {
   count = 0;
   vertices = nullptr;
 }
 
-Physics::Polygon::Polygon(Point* _vertices, unsigned int _count)
+Polygon::Polygon(Point* _vertices, unsigned int _count)
 {
   count = _count;
   vertices = new Point[count];
@@ -25,7 +27,7 @@ Physics::Polygon::Polygon(Point* _vertices, unsigned int _count)
   }
 }
 
-Physics::Polygon::Polygon(const Polygon& _p)
+Polygon::Polygon(const Polygon& _p)
 {
   count = _p.count;
   vertices = new Point[count];
@@ -35,12 +37,12 @@ Physics::Polygon::Polygon(const Polygon& _p)
   }
 }
 
-Physics::Polygon::~Polygon()
+Polygon::~Polygon()
 {
   delete[] vertices;
 }
 
-void Physics::Polygon::setVertices(Point* _vertices, int _count)
+void Polygon::setVertices(Point* _vertices, int _count)
 {
   delete[] vertices;
   count = _count;
@@ -51,20 +53,20 @@ void Physics::Polygon::setVertices(Point* _vertices, int _count)
   }
 }
 
-void Physics::Polygon::changeVertex(int i, double x, double y)
+void Polygon::changeVertex(int i, double x, double y)
 {
   vertices[i].setX(x);
   vertices[i].setY(y);
 }
 
-void Physics::Polygon::setCount(int n)
+void Polygon::setCount(int n)
 {
   delete[] vertices;
   count = n;
   vertices = new Point[count];
 }
 
-double Physics::Polygon::getPerimeter()
+double Polygon::getPerimeter()
 {
   if (count == 0)
     return 0.0;
@@ -76,7 +78,7 @@ double Physics::Polygon::getPerimeter()
   return perimeter;
 }
 
-double Physics::Polygon::getTriangleArea(Point p1, Point p2, Point p3)
+double Polygon::getTriangleArea(Point p1, Point p2, Point p3)
 {
   // Heron's formula
   double a = p1.getDistance(p2);
@@ -86,7 +88,7 @@ double Physics::Polygon::getTriangleArea(Point p1, Point p2, Point p3)
   return sqrt(p * (p - a) * (p - b) * (p - c));
 }
 
-double Physics::Polygon::getConvexArea()
+double Polygon::getConvexArea()
 {
   // Wielok¹t musi byæ wypuk³y
   double area{ 0.0 };
@@ -97,7 +99,7 @@ double Physics::Polygon::getConvexArea()
   return area;
 }
 
-double Physics::Polygon::getArea()
+double Polygon::getArea()
 {
   if (count == 0)
     return 0.0;

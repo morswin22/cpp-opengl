@@ -9,71 +9,68 @@
  * @author Patryk Janiak
  */
 
-Physics::Point::Point()
+using namespace Physics;
+
+Point::Point()
 {
   x = 0.0;
   y = 0.0;
 }
 
-Physics::Point::Point(double _x, double _y)
+Point::Point(double _x, double _y)
 {
   x = _x;
   y = _y;
 }
 
-Physics::Point::Point(const Point& _p)
+Point::Point(const Point& _p)
 {
   x = _p.x;
   y = _p.y;
 }
 
-Physics::Point::~Point()
+Point::~Point()
 {
 }
 
-void Physics::Point::print()
+void Point::print()
 {
   std::cout << "(" << x << ", " << y << ")\n";
 }
 
-void Physics::Point::setX(double _x)
+void Point::setX(double _x)
 {
   x = _x;
 }
 
-double Physics::Point::getX()
+double Point::getX()
 {
   return x;
 }
 
-void Physics::Point::setY(double _y)
+void Point::setY(double _y)
 {
   y = _y;
 }
 
-double Physics::Point::getY()
+double Point::getY()
 {
   return y;
 }
 
-double Physics::Point::getDistance(Point _p)
+double Point::getDistance(Point _p)
 {
   double dx = _p.getX() - x;
   double dy = _p.getY() - y;
   return sqrt(dx * dx + dy * dy);
 }
 
-// double Physics::Point::getRadius()
-// {
-//   return sqrt(x*x + y*y);
-// }
-
-double Physics::Point::getLength()
+double Point::getLength()
 {
   return sqrt(x * x + y * y);
 }
 
-Physics::Point Physics::Point::add(Point _p)
+Point Point::add(Point _p)
 {
   Point temp;
   temp.setX(x + _p.getX());
@@ -81,7 +78,7 @@ Physics::Point Physics::Point::add(Point _p)
   return temp;
 }
 
-Physics::Point Physics::Point::subtract(Point _p)
+Point Point::subtract(Point _p)
 {
   Point temp;
   temp.setX(x - _p.getX());
@@ -89,7 +86,7 @@ Physics::Point Physics::Point::subtract(Point _p)
   return temp;
 }
 
-Physics::Point Physics::Point::multiply(double skalar)
+Point Point::multiply(double skalar)
 {
   Point temp;
   temp.setX(skalar * x);
@@ -97,22 +94,22 @@ Physics::Point Physics::Point::multiply(double skalar)
   return temp;
 }
 
-Physics::Point Physics::Point::getInverse()
+Point Point::getInverse()
 {
   return multiply(-1);
 }
 
-bool Physics::Point::isInverse(Point _p)
+bool Point::isInverse(Point _p)
 {
   return _p.getX() == -x && _p.getY() == -y;
 }
 
-double Physics::Point::getProduct(Point _p)
+double Point::getProduct(Point _p)
 {
   return x * _p.getX() + y * _p.getY();
 }
 
-double Physics::Point::getAngleBetween(Point _p)
+double Point::getAngleBetween(Point _p)
 {
   return cos(getProduct(_p) / (getLength() * _p.getLength()));
 }

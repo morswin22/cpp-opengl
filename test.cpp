@@ -2,9 +2,10 @@
 #include <boost/test/included/unit_test.hpp>
 #include "Polygon.h"
 
+using namespace Physics;
 BOOST_AUTO_TEST_CASE(PointCreateEmpty)
 {
-  Physics::Point p;
+  Point p;
 
   BOOST_CHECK_EQUAL(p.getX(), 0);
   BOOST_CHECK_EQUAL(p.getY(), 0);
@@ -21,14 +22,14 @@ BOOST_AUTO_TEST_CASE(PolygonCreateEmpty)
 
 BOOST_AUTO_TEST_CASE(PolygonCheckShoelaceAndConvexArea)
 {
-  Physics::Polygon p{ new Physics::Point[3]{{0.0, 0.0}, {3.0, 0.0}, {0.0, 4.0}}, 3 };
+  Physics::Polygon p{ new Point[3]{{0.0, 0.0}, {3.0, 0.0}, {0.0, 4.0}}, 3 };
 
   BOOST_CHECK_EQUAL(p.getConvexArea(), p.getArea());
 }
 
 BOOST_AUTO_TEST_CASE(PolygonCheckPerimeterAndArea)
 {
-  Physics::Polygon p{ new Physics::Point[3]{{0.0, 0.0}, {3.0, 0.0}, {0.0, 4.0}}, 3 };
+  Physics::Polygon p{ new Point[3]{{0.0, 0.0}, {3.0, 0.0}, {0.0, 4.0}}, 3 };
 
   BOOST_CHECK_EQUAL(p.getPerimeter(), 12);
   BOOST_CHECK_EQUAL(p.getArea(), 6);
