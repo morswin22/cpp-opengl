@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "Point.h"
+#include<string>
 
 /** @file Polygon.h
  *
@@ -10,6 +10,9 @@
 
 namespace Geometry {
 
+  // Forward declaration of Point
+  class Point;
+
   /** @brief A polygon consisting of vertices */
   class Polygon
   {
@@ -18,15 +21,6 @@ namespace Geometry {
 
     /** @brief An array of Point type vertices */
     Point* vertices;
-
-    /**
-     * @brief A private method to calculate the area of ​​a triangle
-     *
-     * @param p1 argument of type Point
-     * @param p2 argument of type Point
-     * @param p3 argument of type Point
-     */
-    double getTriangleArea(const Point& p1, const Point& p2, const Point& p3) const;
 
   public:
 
@@ -92,3 +86,5 @@ namespace Geometry {
   };
 
 }
+
+#include "Point.h"

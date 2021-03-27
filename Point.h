@@ -1,5 +1,5 @@
 #pragma once
-#include<string>
+#include "Polygon.h"
 
 /** @file Point.h
  *
@@ -9,6 +9,15 @@
  */
 
 namespace Geometry {
+
+  /**
+   * @brief A method to calculate the area of ​​a triangle
+   *
+   * @param p1 argument of type Point
+   * @param p2 argument of type Point
+   * @param p3 argument of type Point
+   */
+  double getTriangleArea(const Point& p1, const Point& p2, const Point& p3);
 
   /** @brief A point in R^2 space composed of Cartesian coordinates */
   class Point
@@ -133,7 +142,9 @@ namespace Geometry {
      */
     double getAngleBetween(const Point& p) const;
 
-    friend class Polygon;
+    friend double getTriangleArea(const Point& p1, const Point& p2, const Point& p3);
+    friend std::string Polygon::getString() const;
+    friend double Polygon::getArea() const;
 
   };
 

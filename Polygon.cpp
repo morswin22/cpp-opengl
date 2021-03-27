@@ -96,17 +96,12 @@ double Polygon::getPerimeter() const
   return perimeter;
 }
 
-double Polygon::getTriangleArea(const Point& p1, const Point& p2, const Point& p3) const
-{
-  return 0.5 * abs(((p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x)));
-}
-
 double Polygon::getConvexArea() const
 {
   double area{ 0.0 };
   for (int i = 2; i < count; i++)
   {
-    area += this->getTriangleArea(this->vertices[0], this->vertices[i - 1], this->vertices[i]);
+    area += getTriangleArea(this->vertices[0], this->vertices[i - 1], this->vertices[i]);
   }
   return area;
 }

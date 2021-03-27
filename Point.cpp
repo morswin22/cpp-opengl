@@ -112,3 +112,8 @@ double Point::getAngleBetween(const Point& p) const
 {
   return cos(this->getProduct(p) / (this->getLength() * p.getLength()));
 }
+
+double Geometry::getTriangleArea(const Point& p1, const Point& p2, const Point& p3)
+{
+  return 0.5 * abs((p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x));
+}
