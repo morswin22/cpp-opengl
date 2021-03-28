@@ -123,3 +123,12 @@ double Polygon::getArea() const
 
   return abs(positive - negative) * 0.5;
 }
+
+std::ostream& Geometry::operator<<(std::ostream& os, const Polygon& p)
+{
+  os << "Polygon[\n";
+  for (int i = 0; i < p.count; i++)
+    os << "\t" << p.vertices[i] << "\n";
+  os << "]";
+  return os;
+}

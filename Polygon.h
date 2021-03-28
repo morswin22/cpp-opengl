@@ -83,7 +83,13 @@ namespace Geometry {
 
     /** @brief Method calculating the area of ​​any polygon */
     double getArea() const;
+
+    friend std::ostream& operator<<(std::ostream& os, const Polygon& p);
+
   };
+
+  /** @brief Method that overloads operator<< and prints formatted position of the vertices */
+  std::ostream& operator<<(std::ostream& os, const Polygon& p);
 
 }
 

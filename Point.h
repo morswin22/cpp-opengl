@@ -101,6 +101,9 @@ namespace Geometry {
      */
     Point add(const Point& p) const;
 
+    /** @brief Method that overloads operator+ and calls add() */
+    Point operator+(const Point& p) const;
+
     /**
      * @brief A method that subtracts two vectors together
      *
@@ -109,6 +112,9 @@ namespace Geometry {
      */
     Point subtract(const Point& p) const;
 
+    /** @brief Method that overloads operator- and calls subtract() */
+    Point operator-(const Point& p) const;
+
     /**
      * @brief A method that multiplies a vector by a scalar
      *
@@ -116,6 +122,9 @@ namespace Geometry {
      * @return The result of multiplying a vector by a scalar
      */
     Point multiply(double skalar) const;
+
+    /** @brief Method that overloads operator* and calls multiply() */
+    Point operator*(double skalar) const;
 
     /** @brief A method that computes the reciprocal of a vector */
     Point getInverse() const;
@@ -135,6 +144,9 @@ namespace Geometry {
      */
     double getProduct(const Point& p) const;
 
+    /** @brief Method that overloads operator* and calls getProduct() */
+    double operator*(const Point& p) const;
+
     /**
      * @brief A method that calculates the angle between vectors
      *
@@ -145,7 +157,11 @@ namespace Geometry {
     friend double getTriangleArea(const Point& p1, const Point& p2, const Point& p3);
     friend std::string Polygon::getString() const;
     friend double Polygon::getArea() const;
+    friend std::ostream& operator<<(std::ostream& os, const Point& p);
 
   };
+
+  /** @brief Method that overloads operator<< and prints formatted position of the point (x, y) */
+  std::ostream& operator<<(std::ostream& os, const Point& p);
 
 }

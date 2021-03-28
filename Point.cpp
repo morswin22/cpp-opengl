@@ -83,14 +83,29 @@ Point Point::add(const Point& p) const
   return Point(this->x + p.x, this->y + p.y);
 }
 
+Point Point::operator+(const Point& p) const
+{
+  return this->add(p);
+}
+
 Point Point::subtract(const Point& p) const
 {
   return Point(this->x - p.x, this->y - p.y);
 }
 
+Point Point::operator-(const Point& p) const
+{
+  return this->subtract(p);
+}
+
 Point Point::multiply(double skalar) const
 {
   return Point(this->x * skalar, this->y * skalar);
+}
+
+Point Point::operator*(double skalar) const
+{
+  return multiply(skalar);
 }
 
 Point Point::getInverse() const
@@ -108,6 +123,11 @@ double Point::getProduct(const Point& p) const
   return this->x * p.x + this->y * p.y;
 }
 
+double Point::operator*(const Point& p) const
+{
+  return this->getProduct(p);
+}
+
 double Point::getAngleBetween(const Point& p) const
 {
   return cos(this->getProduct(p) / (this->getLength() * p.getLength()));
@@ -116,4 +136,10 @@ double Point::getAngleBetween(const Point& p) const
 double Geometry::getTriangleArea(const Point& p1, const Point& p2, const Point& p3)
 {
   return 0.5 * abs((p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x));
+}
+
+std::ostream& Geometry::operator<<(std::ostream& os, const Point& p)
+{
+  os << "Point(" << p.x << ", " << p.y << ")";
+  return os;
 }

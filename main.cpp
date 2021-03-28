@@ -12,8 +12,7 @@ void f()
 {
   Geometry::Polygon p{ new Geometry::Point[3]{{0.0, 0.0}, {3.0, 0.0}, {0.0, 4.0}}, 3 };
 
-  p.print();
-
+  std::cout << p << "\n";
   std::cout << "Perimeter: " << p.getPerimeter() << "\n";
   std::cout << "Convex area: " << p.getConvexArea() << "\n";
 
