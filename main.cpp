@@ -5,8 +5,19 @@
  * @author Patryk Janiak
  */
 
-#include "Polygon.h"
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+
+#include "Polygon.h"
+
+#include "Renderer.h"
+#include "VertexBuffer.h"
+#include "VertexBufferLayout.h"
+#include "IndexBuffer.h"
+#include "VertexArray.h"
+#include "Shader.h"
 
 void f()
 {
@@ -23,6 +34,63 @@ void f()
 int main()
 {
   f();
+
+  Renderer renderer(400, 400, "Test");
+  std::cout << "Version: " << renderer.getVersion() << "\n";
+
+  {
+    float positions[] = {
+      -0.5f, -0.5f,
+       0.5f, -0.5f,
+       0.5f,  0.5f,
+      -0.5f,  0.5f
+    };
+
+    unsigned int indices[] = {
+      0, 1, 2,
+      2, 3, 0
+    };
+
+    VertexArray va;
+    VertexBuffer vb(positions, 4 * 2 * sizeof(float));
+
+    VertexBufferLayout layout;
+    layout.push<float>(2);
+    va.addBuffer(vb, layout);
+
+    IndexBuffer ib(indices, 6);
+
+    Shader shader("Basic.shader");
+    shader.bind();
+    shader.setUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
+
+    va.unbind();
+    shader.unbind();
+    vb.unbind();
+    ib.unbind();
+
+    float r = 0.0f;
+    float increment = 0.05f;
+
+    while (renderer.isRunning())
+    {
+      renderer.clear();
+
+      shader.bind();
+      shader.setUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
+      renderer.draw(va, ib, shader);
+
+      if (r > 1.0f)
+        increment = -0.05f;
+      else if (r < 0.0f)
+        increment = 0.05f;
+
+      r += increment;
+
+      renderer.swapBuffers();
+      renderer.pollEvents();
+    }
+  };
 
   return 0;
 }
