@@ -10,14 +10,8 @@
 #include <string>
 #include <sstream>
 
-#include "Polygon.h"
-
-#include "Renderer.h"
-#include "VertexBuffer.h"
-#include "VertexBufferLayout.h"
-#include "IndexBuffer.h"
-#include "VertexArray.h"
-#include "Shader.h"
+#include "src/Geometry.h"
+#include "src/Graphics.h"
 
 void f()
 {
@@ -35,7 +29,7 @@ int main()
 {
   f();
 
-  Renderer renderer(400, 400, "Test");
+  Graphics::Renderer renderer(400, 400, "Test");
   std::cout << "Version: " << renderer.getVersion() << "\n";
 
   {
@@ -51,16 +45,16 @@ int main()
       2, 3, 0
     };
 
-    VertexArray va;
-    VertexBuffer vb(positions, 4 * 2 * sizeof(float));
+    Graphics::VertexArray va;
+    Graphics::VertexBuffer vb(positions, 4 * 2 * sizeof(float));
 
-    VertexBufferLayout layout;
+    Graphics::VertexBufferLayout layout;
     layout.push<float>(2);
     va.addBuffer(vb, layout);
 
-    IndexBuffer ib(indices, 6);
+    Graphics::IndexBuffer ib(indices, 6);
 
-    Shader shader("Basic.shader");
+    Graphics::Shader shader("assets/shaders/Basic.shader");
     shader.bind();
     shader.setUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
 

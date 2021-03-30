@@ -7,19 +7,21 @@
  * @author Patryk Janiak
  */
 
-/** @brief Handles OpenGL's index buffer */
-class IndexBuffer
-{
-  /** @brief Buffer id */
-  unsigned int rendererID;
+namespace Graphics {
 
-  /** @brief Number of indices */
-  unsigned int count;
+  /** @brief Handles OpenGL's index buffer */
+  class IndexBuffer
+  {
+    /** @brief Buffer id */
+    unsigned int rendererID;
+
+    /** @brief Number of indices */
+    unsigned int count;
 
   public:
     /**
-     * @brief Main constructor 
-     * 
+     * @brief Main constructor
+     *
      * @param data an array containing the indices
      * @param count number of indices
      */
@@ -36,4 +38,6 @@ class IndexBuffer
 
     /**  @brief Getter for the number of indices */
     inline unsigned int getCount() const { return this->count; }
-};
+  };
+
+}

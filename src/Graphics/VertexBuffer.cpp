@@ -9,6 +9,8 @@
  * @author Patryk Janiak
  */
 
+using namespace Graphics;
+
 VertexBuffer::VertexBuffer(const void* data, unsigned int size)
 {
   GLCall(glGenBuffers(1, &this->rendererID));

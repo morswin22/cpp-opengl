@@ -9,6 +9,8 @@
  * @author Patryk Janiak
  */
 
+using namespace Graphics;
+
 IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count) : count(count)
 {
   ASSERT(sizeof(unsigned int) == sizeof(GLuint));

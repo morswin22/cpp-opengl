@@ -7,6 +7,8 @@
  * @author Patryk Janiak
  */
 
+using namespace Graphics;
+
 unsigned int VertexBufferElement::getSizeOfType(unsigned int type) {
   switch (type)
   {

@@ -9,12 +9,14 @@
  * @author Patryk Janiak
  */
 
-void GLClearError()
+using namespace Graphics;
+
+void ::GLClearError()
 {
   while (glGetError() != GL_NO_ERROR);
 }
 
-bool GLLogCall(const char* function, const char* file, int line)
+bool ::GLLogCall(const char* function, const char* file, int line)
 {
   while (GLenum error = glGetError())
   {

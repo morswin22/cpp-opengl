@@ -12,6 +12,8 @@
  * @author Patryk Janiak
  */
 
+using namespace Graphics;
+
 VertexArray::VertexArray()
 {
   GLCall(glGenVertexArrays(1, &this->rendererID));
