@@ -1,6 +1,9 @@
 #include "Renderer.h"
 
 #include <iostream>
+#include <imgui.h>
+#include <imgui_impl_opengl3.h>
+#include <imgui_impl_glfw.h>
 
 /** @file Renderer.cpp
  *
@@ -43,10 +46,24 @@ Renderer::Renderer(int width, int height, const char* title)
 
   if (glewInit() != GLEW_OK)
     throw "GLEW initialization error";
+
+  GLCall(glEnable(GL_BLEND));
+  GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+
+  ImGui::CreateContext();
+  ImGui::StyleColorsDark();
+
+  ImGui_ImplGlfw_InitForOpenGL(this->window, true);
+  ImGui_ImplOpenGL3_Init("#version 130");
+
 }
 
 Renderer::~Renderer()
 {
+  ImGui_ImplOpenGL3_Shutdown();
+  ImGui_ImplGlfw_Shutdown();
+  ImGui::DestroyContext();
+  glfwDestroyWindow(this->window);
   glfwTerminate();
 }
 
@@ -71,6 +88,19 @@ const unsigned char* Renderer::getVersion() const
 bool Renderer::isRunning() const
 {
   return !glfwWindowShouldClose(this->window);
+}
+
+void Graphics::Renderer::ImGuiBeginFrame() const
+{
+  ImGui_ImplOpenGL3_NewFrame();
+  ImGui_ImplGlfw_NewFrame();
+  ImGui::NewFrame();
+}
+
+void Graphics::Renderer::ImGuiEndFrame() const
+{
+  ImGui::Render();
+  ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void Renderer::swapBuffers() const

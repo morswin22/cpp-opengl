@@ -13,3 +13,4 @@
 #include "Graphics/IndexBuffer.h"
 #include "Graphics/VertexArray.h"
 #include "Graphics/Shader.h"
+#include "Graphics/Texture.h"

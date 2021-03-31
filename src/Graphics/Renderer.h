@@ -77,6 +77,12 @@ namespace Graphics {
      */
     bool isRunning() const;
 
+    /** @brief Handle for ImGui new frame */
+    void ImGuiBeginFrame() const;
+
+    /** @brief Handle for ImGui render */
+    void ImGuiEndFrame() const;
+
     /** @brief Handle for GLWF swapBuffers */
     void swapBuffers() const;
 

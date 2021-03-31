@@ -3,6 +3,8 @@
 #include <string>
 #include <unordered_map>
 
+#include <glm/glm.hpp>
+
 /** @file Shader.h
  *
  * @brief Contains a Shader class declaration and a ShaderProgramSource struct declaration
@@ -22,7 +24,7 @@ namespace Graphics {
     std::string fragmentSource;
   };
 
-  /**  @brief Creates a shader program to run on the GPU */
+  /** @brief Creates a shader program to run on the GPU */
   class Shader
   {
     /** @brief Path to the file containing shader source code */
@@ -85,6 +87,22 @@ namespace Graphics {
     void unbind() const;
 
     /**
+     * @brief Setter of the uniform variable with 1 int
+     *
+     * @param name variable's name
+     * @param value the value to be stored
+     */
+    void setUniform1i(const std::string& name, int value);
+
+    /**
+     * @brief Setter of the uniform variable with 1 float
+     *
+     * @param name variable's name
+     * @param value the value to be stored
+     */
+    void setUniform1f(const std::string& name, float value);
+
+    /**
      * @brief Setter of the uniform variable with 4 floats
      *
      * @param name variable's name
@@ -94,6 +112,14 @@ namespace Graphics {
      * @param v3 forth value
      */
     void setUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
+
+    /**
+     * @brief Setter of the uniform matrix with 4 floats
+     *
+     * @param name variable's name
+     * @param matrix the value to be stored
+     */
+    void setUniformMat4f(const std::string& name, const glm::mat4& matrix);
   };
 
 }
