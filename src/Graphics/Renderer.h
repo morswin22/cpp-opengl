@@ -2,6 +2,7 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 #include "VertexArray.h"
 #include "IndexBuffer.h"
@@ -17,20 +18,20 @@
  * @author Patryk Janiak
  */
 
+/** @brief This function removes all pending OpenGL's errors */
+void GLClearError();
+
+/**
+ * @brief This function prints all pending OpenGL's errors
+ *
+ * @param function the executed code
+ * @param file the file with that code
+ * @param line the line with that code
+ * @return true when there are no errors
+ */
+bool GLLogCall(const char* function, const char* file, int line);
+
 namespace Graphics {
-
-  /** @brief This function removes all pending OpenGL's errors */
-  void GLClearError();
-
-  /**
-   * @brief This function prints all pending OpenGL's errors
-   *
-   * @param function the executed code
-   * @param file the file with that code
-   * @param line the line with that code
-   * @return true when there are no errors
-   */
-  bool GLLogCall(const char* function, const char* file, int line);
 
   /** @brief Main OpenGL handler class */
   class Renderer
@@ -38,18 +39,43 @@ namespace Graphics {
     /** @brief GLFW window handle */
     GLFWwindow* window;
 
+    /** @brief The projection matrix */
+    glm::mat4 projection;
+
+    /** @brief The view matrix */
+    glm::mat4 view;
+
+    /** @brief Timestamp of the last frame */
+    double lastTime;
+
+    /** @brief Hidden default constructor */
+    Renderer();
+
   public:
+    /** @brief Destructor of Renderer class */
+    ~Renderer();
+
+    /** @brief Singleton getter */
+    static Renderer& get()
+    {
+      static Renderer instance;
+      return instance;
+    }
+
     /**
-     * @brief Main constructor
+     * @brief Title setter
+     *
+     * @param title window's tittle
+     */
+    void setTitle(const char* title);
+
+    /**
+     * @brief Size setter
      *
      * @param width window's width
      * @param height window's height
-     * @param title window's tittle
      */
-    Renderer(int width, int height, const char* title);
-
-    /** @brief Destructor of Renderer class */
-    ~Renderer();
+    void setSize(int width, int height);
 
     /** @brief Clears the window */
     void clear() const;
@@ -69,6 +95,15 @@ namespace Graphics {
      * @return const unsigned* the driver version
      */
     const unsigned char* getVersion() const;
+
+    /** @brief Getter for the time elapsed since last frame */
+    double getDeltaTime();
+
+    /** @biref Getter for the projection matrix */
+    inline glm::mat4 getProjection() const { return this->projection; }
+
+    /** @biref Getter for the view matrix */
+    inline glm::mat4 getView() const { return this->view; }
 
     /**
      * @brief Getter for the window open state

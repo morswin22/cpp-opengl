@@ -43,6 +43,7 @@ void Graphics::Texture::bind(unsigned int slot) const
 
 void Graphics::Texture::unbind() const
 {
+  GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 }
 
 inline int Graphics::Texture::getWidth() const

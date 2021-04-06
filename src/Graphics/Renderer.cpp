@@ -4,6 +4,8 @@
 #include <imgui.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_glfw.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 /** @file Renderer.cpp
  *
@@ -14,12 +16,12 @@
 
 using namespace Graphics;
 
-void ::GLClearError()
+void GLClearError()
 {
   while (glGetError() != GL_NO_ERROR);
 }
 
-bool ::GLLogCall(const char* function, const char* file, int line)
+bool GLLogCall(const char* function, const char* file, int line)
 {
   while (GLenum error = glGetError())
   {
@@ -29,12 +31,12 @@ bool ::GLLogCall(const char* function, const char* file, int line)
   return true;
 }
 
-Renderer::Renderer(int width, int height, const char* title)
+Renderer::Renderer()
 {
   if (!glfwInit())
     throw "GLFW initialization error";
 
-  this->window = glfwCreateWindow(width, height, title, NULL, NULL);
+  this->window = glfwCreateWindow(100, 100, "Default", NULL, NULL);
   if (!this->window)
   {
     glfwTerminate();
@@ -56,6 +58,10 @@ Renderer::Renderer(int width, int height, const char* title)
   ImGui_ImplGlfw_InitForOpenGL(this->window, true);
   ImGui_ImplOpenGL3_Init("#version 130");
 
+  this->projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+  this->view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+
+  this->lastTime = glfwGetTime();
 }
 
 Renderer::~Renderer()
@@ -67,9 +73,22 @@ Renderer::~Renderer()
   glfwTerminate();
 }
 
+void Renderer::setTitle(const char* title)
+{
+  glfwSetWindowTitle(this->window, title);
+}
+
+void Renderer::setSize(int width, int height)
+{
+  glfwSetWindowSize(this->window, width, height);
+  GLCall(glViewport(0, 0, width, height));
+  this->projection = glm::ortho(0.0f, (float)width, 0.0f, (float)height, -1.0f, 1.0f);
+}
+
 void Renderer::clear() const
 {
-  glClear(GL_COLOR_BUFFER_BIT);
+  GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
+  GLCall(glClear(GL_COLOR_BUFFER_BIT));
 }
 
 void Renderer::draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const
@@ -83,6 +102,13 @@ void Renderer::draw(const VertexArray& va, const IndexBuffer& ib, const Shader& 
 const unsigned char* Renderer::getVersion() const
 {
   return glGetString(GL_VERSION);
+}
+
+double Renderer::getDeltaTime()
+{
+  double temp = this->lastTime;
+  this->lastTime = glfwGetTime();
+  return this->lastTime - temp;
 }
 
 bool Renderer::isRunning() const
