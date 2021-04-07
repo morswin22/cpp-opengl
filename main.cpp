@@ -18,18 +18,7 @@
 #include "tests/Test.h"
 #include "tests/TestSolidColor.h"
 #include "tests/TestTexture2D.h"
-
-//void f()
-//{
-//  Geometry::Polygon p{ new Geometry::Point[3]{{0.0, 0.0}, {3.0, 0.0}, {0.0, 4.0}}, 3 };
-//
-//  std::cout << p << "\n";
-//  std::cout << "Perimeter: " << p.getPerimeter() << "\n";
-//  std::cout << "Convex area: " << p.getConvexArea() << "\n";
-//
-//  p.setVertices(new Geometry::Point[3]{{2.0, 4.0}, {3.0, -8.0}, {1.0, 2.0}}, 3);
-//  std::cout << "Shoelace area for a different set of vertices: " << p.getArea() << "\n";
-//}
+#include "tests/TestGeometry.h"
 
 int main()
 {
@@ -46,6 +35,7 @@ int main()
 
     testMenu->registerTest<Tests::TestSolidColor>("Solid color");
     testMenu->registerTest<Tests::TestTexture2D>("2D texture");
+    testMenu->registerTest<Tests::TestGeometry>("Geometry");
 
     while (renderer.isRunning())
     {
