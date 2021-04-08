@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include<string>
+#include "../Graphics.h"
 
 /** @file Polygon.h
  *
@@ -60,7 +61,7 @@ namespace Geometry {
      * @param x argument of type double that passes a new value to the x-coordinate
      * @param y argument of type double that passes a new value to the y-coordinate
      */
-    void changeVertex(int i, double x, double y);
+    void changeVertex(unsigned int i, double x, double y);
 
     /**
      * @brief A method to set the number of vertices.
@@ -83,6 +84,9 @@ namespace Geometry {
 
     /** @brief Method calculating the area of ​​any polygon */
     double getArea() const;
+
+    /** @brief Method returning object containing required data to render */
+    Graphics::Renderable getRenderable(std::string shaderPath) const;
 
     friend std::ostream& operator<<(std::ostream& os, const Polygon& p);
 

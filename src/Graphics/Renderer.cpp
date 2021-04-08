@@ -31,7 +31,30 @@ bool GLLogCall(const char* function, const char* file, int line)
   return true;
 }
 
+Renderable::Renderable(unsigned int* indices, int indicesCount, std::string shaderPath)
+{
+  this->VAO = std::make_unique<VertexArray>();
+  this->IBO = std::make_unique<IndexBuffer>(indices, indicesCount);
+  this->shader = std::make_unique<Shader>(shaderPath);
+}
+
+inline void receiveScroll(GLFWwindow* window, double xoffset, double yoffset)
+{
+  Renderer::get().handleScroll(xoffset, yoffset);
+}
+
+inline void receiveMousePosition(GLFWwindow* window, double xpos, double ypos)
+{
+  Renderer::get().handleMousePosition(xpos, ypos);
+}
+
+inline void receiveMouseButtons(GLFWwindow* window, int button, int action, int mods)
+{
+  Renderer::get().handleMouseButtons(button, action, mods);
+}
+
 Renderer::Renderer()
+  : cameraPosition(0.0f, 0.0f, 0.0f), cameraZoom(1.0f, 1.0f, 1.0f), mousePosition(0.0f, 0.0f), isMouseDragged(false), mouseDragOrigin(0.0f, 0.0f)
 {
   if (!glfwInit())
     throw "GLFW initialization error";
@@ -52,14 +75,18 @@ Renderer::Renderer()
   GLCall(glEnable(GL_BLEND));
   GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
+  this->projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+  this->view = glm::scale(glm::translate(glm::mat4(1.0f), this->cameraPosition), this->cameraZoom);
+
+  glfwSetScrollCallback(this->window, receiveScroll);
+  glfwSetCursorPosCallback(this->window, receiveMousePosition);
+  glfwSetMouseButtonCallback(this->window, receiveMouseButtons);
+
   ImGui::CreateContext();
   ImGui::StyleColorsDark();
 
   ImGui_ImplGlfw_InitForOpenGL(this->window, true);
   ImGui_ImplOpenGL3_Init("#version 130");
-
-  this->projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
-  this->view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
   this->lastTime = glfwGetTime();
 }
@@ -99,9 +126,85 @@ void Renderer::draw(const VertexArray& va, const IndexBuffer& ib, const Shader& 
   GLCall(glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr));
 }
 
+void Renderer::draw(const Renderable& object) const
+{
+  object.shader->bind();
+  object.VAO->bind();
+  object.IBO->bind();
+  GLCall(glDrawElements(GL_TRIANGLES, object.IBO->getCount(), GL_UNSIGNED_INT, nullptr));
+}
+
 const unsigned char* Renderer::getVersion() const
 {
   return glGetString(GL_VERSION);
+}
+
+void Renderer::setCameraPosition(float x, float y)
+{
+  this->cameraPosition = glm::vec3(x, y, 0.0f);
+  this->view = glm::scale(glm::translate(glm::mat4(1.0f), this->cameraPosition), this->cameraZoom);
+}
+
+void Renderer::setCameraZoom(float z)
+{
+  this->cameraZoom = glm::vec3(z, z, 1.0f);
+  this->view = glm::scale(glm::translate(glm::mat4(1.0f), this->cameraPosition), this->cameraZoom);
+}
+
+void Renderer::setCameraZoom(float zx, float zy)
+{
+  this->cameraZoom = glm::vec3(zx, zy, 1.0f);
+  this->view = glm::scale(glm::translate(glm::mat4(1.0f), this->cameraPosition), this->cameraZoom);
+}
+
+void Renderer::handleScroll(double xoffset, double yoffset)
+{
+  this->cameraZoom.x *= (float) (yoffset * 0.375 + 1.125);
+  this->cameraZoom.y *= (float) (yoffset * 0.375 + 1.125);
+  this->view = glm::scale(glm::translate(glm::mat4(1.0f), this->cameraPosition), this->cameraZoom);
+}
+
+void Renderer::handleMousePosition(double xpos, double ypos)
+{
+  this->mousePosition.x = (float) xpos;
+  this->mousePosition.y = (float) (540 - ypos);
+  if (this->isMouseDragged)
+  {
+    glm::vec3 tempPosition(this->cameraPosition.x + (this->mousePosition.x - this->mouseDragOrigin.x), this->cameraPosition.y + (this->mousePosition.y - this->mouseDragOrigin.y), 1.0f);
+    this->view = glm::scale(glm::translate(glm::mat4(1.0f), tempPosition), this->cameraZoom);
+  }
+}
+
+void Renderer::handleMouseButtons(int button, int action, int mods)
+{
+  if (button == GLFW_MOUSE_BUTTON_LEFT)
+  {
+    if (action == GLFW_PRESS)
+    {
+      if (mods & GLFW_MOD_CONTROL)
+      {
+        this->isMouseDragged = true;
+        this->mouseDragOrigin.x = this->mousePosition.x;
+        this->mouseDragOrigin.y = this->mousePosition.y;
+      }
+    }
+    else
+    {
+      if (this->isMouseDragged) 
+      {
+        this->isMouseDragged = false;
+        this->cameraPosition.x += this->mousePosition.x - this->mouseDragOrigin.x;
+        this->cameraPosition.y += this->mousePosition.y - this->mouseDragOrigin.y;
+      }
+    }
+  }
+}
+
+void Renderer::resetCamera()
+{
+  this->setCameraPosition(0.0f, 0.0f);
+  this->setCameraZoom(1.0f);
+  this->isMouseDragged = false;
 }
 
 double Renderer::getDeltaTime()

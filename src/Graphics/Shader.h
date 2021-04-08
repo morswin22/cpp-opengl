@@ -70,6 +70,9 @@ namespace Graphics {
     unsigned int createShader(const std::string& vertexShader, const std::string& fragmentShader);
 
   public:
+    /** @brief Default constructor */
+    Shader();
+
     /**
      * @brief Main constructor
      *

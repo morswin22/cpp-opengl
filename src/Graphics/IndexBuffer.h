@@ -19,6 +19,9 @@ namespace Graphics {
     unsigned int count;
 
   public:
+    /** @brief Default constructor */
+    IndexBuffer();
+
     /**
      * @brief Main constructor
      *

@@ -51,6 +51,7 @@ int main()
         {
           delete currentTest;
           currentTest = testMenu;
+          renderer.resetCamera();
         }
         currentTest->onImGuiRender();
         ImGui::End();

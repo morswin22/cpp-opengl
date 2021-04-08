@@ -21,6 +21,11 @@ enum class ShaderType
   NONE = -1, VERTEX = 0, FRAGMENT = 1
 };
 
+Shader::Shader()
+  : rendererID(0)
+{
+}
+
 Shader::Shader(const std::string& filepath) : filepath(filepath), rendererID(0)
 {
   ShaderProgramSource source = this->parseShader();
@@ -57,7 +62,7 @@ void Shader::setUniform4f(const std::string& name, float v0, float v1, float v2,
   GLCall(glUniform4f(this->getUniformLocation(name), v0, v1, v2, v3));
 }
 
-void Graphics::Shader::setUniformMat4f(const std::string& name, const glm::mat4& matrix)
+void Shader::setUniformMat4f(const std::string& name, const glm::mat4& matrix)
 {
   GLCall(glUniformMatrix4fv(this->getUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
 }

@@ -29,7 +29,7 @@ namespace Tests {
      * 
      * @param deltaTime amount of elapsed time since last render
      */
-    virtual void onUpdate(float deltaTime) {}
+    virtual void onUpdate(double deltaTime) {}
 
     /** @brief This method gets called after update */
     virtual void onRender() {}

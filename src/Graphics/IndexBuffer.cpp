@@ -11,6 +11,11 @@
 
 using namespace Graphics;
 
+IndexBuffer::IndexBuffer()
+  : rendererID(0), count(0)
+{
+}
+
 IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count) : count(count)
 {
   ASSERT(sizeof(unsigned int) == sizeof(GLuint));

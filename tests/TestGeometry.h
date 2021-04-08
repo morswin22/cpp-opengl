@@ -21,20 +21,14 @@ namespace Tests {
     /** @brief Stores the triangle */
     std::unique_ptr<Geometry::Polygon> triangle;
 
-    /** @brief Stores object position */
-    glm::vec3 translation;
+    /** @brief Stores the renderable triangle */
+    Graphics::Renderable renderableTriangle;
 
-    /** @biref Stores object scale */
-    glm::vec3 scale;
+    /** @brief Stores the complex shape */
+    std::unique_ptr<Geometry::Polygon> complexShape;
 
-    /** @brief Stores VAO of the rendered object */
-    std::unique_ptr<Graphics::VertexArray> VAO;
-
-    /** @brief Stores index buffer of the rendered object */
-    std::unique_ptr<Graphics::IndexBuffer> indexBuffer;
-
-    /** @brief Stores the shader program */
-    std::unique_ptr<Graphics::Shader> shader;
+    /** @brief Stores the renderable complex shape */
+    Graphics::Renderable renderableComplexShape;
 
   public:
     /** @brief Default constructor */

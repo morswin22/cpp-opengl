@@ -15,48 +15,46 @@
 
 using namespace Tests;
 
-TestGeometry::TestGeometry() : translation(150.0f, 200.0f, 0.0f), scale(50.0f, 50.0f, 1.0f)
+TestGeometry::TestGeometry()
 {
-  Geometry::Point* vertices = new Geometry::Point[3]{ {0.0, 0.0}, {3.0, 0.0}, {0.0, 4.0} };
+  Geometry::Point* vertices = nullptr;
+
+  vertices = new Geometry::Point[3]{ {0.0, 0.0}, {3.0, 0.0}, {0.0, 4.0} };
   this->triangle = std::make_unique<Geometry::Polygon>(vertices, 3);
+  this->renderableTriangle = this->triangle->getRenderable("assets/shaders/SolidColor.shader");
+  delete[] vertices;
 
-  float positions[] = {
-    vertices[0].getX(), vertices[0].getY(),
-    vertices[1].getX(), vertices[1].getY(),
-    vertices[2].getX(), vertices[2].getY()
-  };
+  vertices = new Geometry::Point[5]{ {-2.0, -1.0}, {-1.0, -3.0}, {-3.0, -4.0}, {-4.0, -3.0}, {-4.0, -2.0} };
+  this->complexShape = std::make_unique<Geometry::Polygon>(vertices, 5);
+  this->renderableComplexShape = this->complexShape->getRenderable("assets/shaders/SolidColor.shader");
+  delete[] vertices;
 
-  unsigned int indices[] = {
-    0, 1, 2
-  };
-
-  this->VAO = std::make_unique<Graphics::VertexArray>();
-  Graphics::VertexBuffer vb(positions, 3 * 2 * sizeof(float));
-
-  Graphics::VertexBufferLayout layout;
-  layout.push<float>(2);
-  this->VAO->addBuffer(vb, layout);
-
-  this->indexBuffer = std::make_unique<Graphics::IndexBuffer>(indices, 3);
-
-  this->shader = std::make_unique<Graphics::Shader>("assets/shaders/SolidColor.shader");
-  this->shader->bind();
-
-  this->VAO->unbind();
-  vb.unbind();
-  this->indexBuffer->unbind();
-  this->shader->unbind();
+  auto& renderer = Graphics::Renderer::get();
+  renderer.setCameraPosition(480.0f, 270.0f);
+  renderer.setCameraZoom(50.0f);
 }
 
 void TestGeometry::onRender()
 {
   auto& renderer = Graphics::Renderer::get();
-  this->shader->bind();
+  
+  {
+    this->renderableTriangle.shader->bind();
 
-  glm::mat4 model = glm::scale(glm::translate(glm::mat4(1.0f), this->translation), this->scale);
-  glm::mat4 mvp = renderer.getProjection() * renderer.getView() * model;
-  this->shader->setUniformMat4f("u_MVP", mvp);
-  this->shader->setUniform4f("u_Color", 1.0f, 0.0f, 1.0f, 1.0f);
+    glm::mat4 mvp = renderer.getProjection() * renderer.getView();
+    this->renderableTriangle.shader->setUniformMat4f("u_MVP", mvp);
+    this->renderableTriangle.shader->setUniform4f("u_Color", 1.0f, 0.0f, 1.0f, 1.0f);
 
-  renderer.draw(*this->VAO, *this->indexBuffer, *this->shader);
+    renderer.draw(this->renderableTriangle);
+  }
+
+  {
+    this->renderableComplexShape.shader->bind();
+
+    glm::mat4 mvp = renderer.getProjection() * renderer.getView();
+    this->renderableComplexShape.shader->setUniformMat4f("u_MVP", mvp);
+    this->renderableComplexShape.shader->setUniform4f("u_Color", 0.75f, 1.0f, 0.0f, 1.0f);
+
+    renderer.draw(this->renderableComplexShape);
+  }
 }

@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <memory>
 
 #include "VertexArray.h"
 #include "IndexBuffer.h"
@@ -33,6 +34,31 @@ bool GLLogCall(const char* function, const char* file, int line);
 
 namespace Graphics {
 
+  /** @brief A struct containing all required data to render */
+  struct Renderable
+  {
+    /** @brief The vertex buffer object */
+    std::unique_ptr<VertexArray> VAO;
+
+    /** @brief The index buffer object */
+    std::unique_ptr<IndexBuffer> IBO;
+
+    /** @brief The shader program */
+    std::unique_ptr<Shader> shader;
+
+    /** @brief Default constructor */
+    Renderable() {};
+
+    /** 
+     * @brief Main constructor
+     * 
+     * @param indices A table of indices describing the triangles in VAO
+     * @param indicesCount Number of indices
+     * @param shaderPath The path to the shader program
+     */
+    Renderable(unsigned int* indices, int indicesCount, std::string shaderPath);
+  };
+
   /** @brief Main OpenGL handler class */
   class Renderer
   {
@@ -41,6 +67,21 @@ namespace Graphics {
 
     /** @brief The projection matrix */
     glm::mat4 projection;
+
+    /** @brief Mouse position on the screen */
+    glm::vec2 mousePosition;
+
+    /** @brief Mouse dragging state */
+    bool isMouseDragged;
+
+    /** @brief The mouse drag origin position */
+    glm::vec2 mouseDragOrigin;
+
+    /** @brief The camera position */
+    glm::vec3 cameraPosition;
+
+    /** @biref The camera zoom */
+    glm::vec3 cameraZoom;
 
     /** @brief The view matrix */
     glm::mat4 view;
@@ -89,6 +130,9 @@ namespace Graphics {
      */
     void draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
 
+    /** @brief Draw using the given Renderable object */
+    void draw(const Renderable& object) const;
+
     /**
      * @brief Getter for the driver version
      *
@@ -102,8 +146,29 @@ namespace Graphics {
     /** @biref Getter for the projection matrix */
     inline glm::mat4 getProjection() const { return this->projection; }
 
-    /** @biref Getter for the view matrix */
+    /** @brief Getter for the view matrix */
     inline glm::mat4 getView() const { return this->view; }
+
+    /** @brief Setter for the camera position */
+    void setCameraPosition(float x, float y);
+
+    /** @brief Setter for the camera zoom */
+    void setCameraZoom(float z);
+
+    /** @brief Setter for the camera zoom */
+    void setCameraZoom(float zx, float zy);
+
+    /** @brief Method that resets the camera to default */
+    void resetCamera();
+
+    /** @brief Handle the scroll event from OpenGL */
+    void handleScroll(double xoffset, double yoffset);
+
+    /** @brief Handle the mouse move event from OpenGL */
+    void handleMousePosition(double xpos, double ypos);
+
+    /** @brief Handle the mouse buttons events from OpenGL */
+    void handleMouseButtons(int button, int action, int mods);
 
     /**
      * @brief Getter for the window open state
