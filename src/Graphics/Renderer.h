@@ -74,6 +74,12 @@ namespace Graphics {
     /** @brief Mouse dragging state */
     bool isMouseDragged;
 
+    /** @brief Flag describing wheter mouse can move the camera */
+    bool allowMouseDrag;
+
+    /** @brief Flag describing wheter mouse can zoom in/out the camera */
+    bool allowMouseZoom;
+
     /** @brief The mouse drag origin position */
     glm::vec2 mouseDragOrigin;
 
@@ -157,6 +163,12 @@ namespace Graphics {
 
     /** @brief Setter for the camera zoom */
     void setCameraZoom(float zx, float zy);
+
+    /** @brief Setter for the mouse camera move flag */
+    void setAllowMouseDrag(bool value);
+
+    /** @brief Setter for the mouse camera zoom flag */
+    void setAllowMouseZoom(bool value);
 
     /** @brief Method that resets the camera to default */
     void resetCamera();

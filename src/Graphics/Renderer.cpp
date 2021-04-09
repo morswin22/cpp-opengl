@@ -54,7 +54,7 @@ inline void receiveMouseButtons(GLFWwindow* window, int button, int action, int 
 }
 
 Renderer::Renderer()
-  : cameraPosition(0.0f, 0.0f, 0.0f), cameraZoom(1.0f, 1.0f, 1.0f), mousePosition(0.0f, 0.0f), isMouseDragged(false), mouseDragOrigin(0.0f, 0.0f)
+  : cameraPosition(0.0f, 0.0f, 0.0f), cameraZoom(1.0f, 1.0f, 1.0f), mousePosition(0.0f, 0.0f), isMouseDragged(false), allowMouseDrag(false), mouseDragOrigin(0.0f, 0.0f)
 {
   if (!glfwInit())
     throw "GLFW initialization error";
@@ -141,26 +141,31 @@ const unsigned char* Renderer::getVersion() const
 
 void Renderer::setCameraPosition(float x, float y)
 {
-  this->cameraPosition = glm::vec3(x, y, 0.0f);
+  this->cameraPosition.x = x;
+  this->cameraPosition.y = y;
   this->view = glm::scale(glm::translate(glm::mat4(1.0f), this->cameraPosition), this->cameraZoom);
 }
 
 void Renderer::setCameraZoom(float z)
 {
-  this->cameraZoom = glm::vec3(z, z, 1.0f);
+  this->cameraZoom.x = z;
+  this->cameraZoom.y = z;
   this->view = glm::scale(glm::translate(glm::mat4(1.0f), this->cameraPosition), this->cameraZoom);
 }
 
 void Renderer::setCameraZoom(float zx, float zy)
 {
-  this->cameraZoom = glm::vec3(zx, zy, 1.0f);
+  this->cameraZoom.x = zx;
+  this->cameraZoom.y = zy;
   this->view = glm::scale(glm::translate(glm::mat4(1.0f), this->cameraPosition), this->cameraZoom);
 }
 
 void Renderer::handleScroll(double xoffset, double yoffset)
 {
-  this->cameraZoom.x *= (float) (yoffset * 0.375 + 1.125);
-  this->cameraZoom.y *= (float) (yoffset * 0.375 + 1.125);
+  if (!this->allowMouseZoom)
+    return;
+  this->cameraZoom.x *= (float)(yoffset * 0.375 + 1.125);
+  this->cameraZoom.y *= (float)(yoffset * 0.375 + 1.125);
   this->view = glm::scale(glm::translate(glm::mat4(1.0f), this->cameraPosition), this->cameraZoom);
 }
 
@@ -168,7 +173,7 @@ void Renderer::handleMousePosition(double xpos, double ypos)
 {
   this->mousePosition.x = (float) xpos;
   this->mousePosition.y = (float) (540 - ypos);
-  if (this->isMouseDragged)
+  if (this->allowMouseDrag && this->isMouseDragged)
   {
     glm::vec3 tempPosition(this->cameraPosition.x + (this->mousePosition.x - this->mouseDragOrigin.x), this->cameraPosition.y + (this->mousePosition.y - this->mouseDragOrigin.y), 1.0f);
     this->view = glm::scale(glm::translate(glm::mat4(1.0f), tempPosition), this->cameraZoom);
@@ -183,14 +188,17 @@ void Renderer::handleMouseButtons(int button, int action, int mods)
     {
       if (mods & GLFW_MOD_CONTROL)
       {
-        this->isMouseDragged = true;
-        this->mouseDragOrigin.x = this->mousePosition.x;
-        this->mouseDragOrigin.y = this->mousePosition.y;
+        if (this->allowMouseDrag)
+        {
+          this->isMouseDragged = true;
+          this->mouseDragOrigin.x = this->mousePosition.x;
+          this->mouseDragOrigin.y = this->mousePosition.y;
+        }
       }
     }
     else
     {
-      if (this->isMouseDragged) 
+      if (this->allowMouseDrag && this->isMouseDragged)
       {
         this->isMouseDragged = false;
         this->cameraPosition.x += this->mousePosition.x - this->mouseDragOrigin.x;
@@ -200,11 +208,24 @@ void Renderer::handleMouseButtons(int button, int action, int mods)
   }
 }
 
+void Renderer::setAllowMouseDrag(bool value)
+{
+  this->allowMouseDrag = value;
+}
+
+void Renderer::setAllowMouseZoom(bool value)
+{
+  this->allowMouseZoom = value;
+}
+
+
 void Renderer::resetCamera()
 {
   this->setCameraPosition(0.0f, 0.0f);
   this->setCameraZoom(1.0f);
   this->isMouseDragged = false;
+  this->allowMouseDrag = false;
+  this->allowMouseZoom = false;
 }
 
 double Renderer::getDeltaTime()
@@ -219,14 +240,14 @@ bool Renderer::isRunning() const
   return !glfwWindowShouldClose(this->window);
 }
 
-void Graphics::Renderer::ImGuiBeginFrame() const
+void Renderer::ImGuiBeginFrame() const
 {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
 }
 
-void Graphics::Renderer::ImGuiEndFrame() const
+void Renderer::ImGuiEndFrame() const
 {
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

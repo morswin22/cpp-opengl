@@ -32,6 +32,8 @@ TestGeometry::TestGeometry()
   auto& renderer = Graphics::Renderer::get();
   renderer.setCameraPosition(480.0f, 270.0f);
   renderer.setCameraZoom(50.0f);
+  renderer.setAllowMouseDrag(true);
+  renderer.setAllowMouseZoom(true);
 }
 
 void TestGeometry::onRender()
